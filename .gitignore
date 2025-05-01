@@ -1,0 +1,44 @@
+# Node.js
+node_modules/
+npm-debug.log
+yarn-error.log
+.pnpm-debug.log
+
+# Environment variables
+.env
+
+# Logs
+*.log
+
+# Local server files
+*.pid
+*.sock
+
+# IDEs and Editors
+.vscode/
+.idea/
+*.sublime-workspace
+*.sublime-project
+
+# OS-specific files
+.DS_Store
+Thumbs.db
+
+# Python (if applicable)
+__pycache__/
+*.pyc
+*.pyo
+*.py
+
+# Miscellaneous
+*.tgz
+*.tar.gz
+*.zip
+
+# Test outputs
+test-results/
+coverage/
+
+# Other
+*.bak
+*.swp
