@@ -17,15 +17,18 @@ http://api.nurudhi.my.id/api/auth
 **POST** `/register`
 
 **Request Body:**
+```
 {
   "email": "user@example.com",
   "password": "password123"
 }
-
+```
 **Response:**
+```
 {
   "message": "User registered"
 }
+```
 
 ---
 
@@ -34,15 +37,19 @@ http://api.nurudhi.my.id/api/auth
 **POST** `/login`
 
 **Request Body:**
+```
 {
   "email": "user@example.com",
   "password": "password123"
 }
+```
 
 **Response:**
+```
 {
   "message": "Login Berhasil"
 }
+```
 
 **Catatan:**
 - Jika berhasil, JWT token akan otomatis dikirim sebagai HttpOnly Cookie.
