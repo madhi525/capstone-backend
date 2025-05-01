@@ -32,7 +32,13 @@ exports.login = (req, res) => {
     if (!isMatch) return res.status(401).json({ message: 'Wrong password' });
 
     const token = generateToken(user);
-    res.json({ token });
+    res.cookie('token', token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'None',
+      maxAge: 5*60*60*1000 
+    });
+    res.status(200).json({ message : 'Login Berhasil'});
   });
 };
 
@@ -42,7 +48,7 @@ exports.forgotPassword = async (req, res) => {
 
   User.updatePassword(email, hashedPassword, (err, result) => {
     if (err || result.affectedRows === 0) return res.status(400).json({ message: 'Reset failed or email not found' });
-    res.json({ message: 'Password reset successful' });
+    res.status(200).json({ message: 'Password reset successful' });
   });
 };
 
@@ -64,6 +70,6 @@ exports.changeProfilePicture = async (req, res) => {
         return req.status(200).json({
             message: 'Profil Picture updated!',
             filepath: file_path
-        })
+        });
     })
 }
