@@ -19,6 +19,7 @@ http://api.nurudhi.my.id/api/auth
 **Request Body:**
 ```
 {
+  "username" : "username:,
   "email": "user@example.com",
   "password": "password123"
 }
@@ -65,11 +66,14 @@ Gunakan fetch seperti ini:
 ```
 fetch('http://api.nurudhi.my.id/api/auth/login', {
   method: 'POST',
-  credentials: 'include',
+  credentials: 'include', // <- kecuali untuk register
   headers: {
     'Content-Type': 'application/json',
   },
-  body: JSON.stringify({ email, password })
+  body: JSON.stringify({
+     email, 
+     password 
+    })
 });
 ```
 

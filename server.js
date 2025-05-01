@@ -6,10 +6,10 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 
 dotenv.config();
-app.use(cors({
-    origin: '',
-    credentials: true
-}));
+// app.use(cors({
+//     origin: '',
+//     credentials: true
+// }));
 
 app.use(cors());
 app.use(bodyParser.json());

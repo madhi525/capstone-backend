@@ -1,5 +1,7 @@
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
+const validator = require('validator');
+const sanitizeHtml = require('sanitize-html');
 const User = require('../models/userModel');
 require('dotenv').config();
 
@@ -8,27 +10,45 @@ const generateToken = (user) => {
 };
 
 exports.register = async (req, res) => {
-  const { email, password } = req.body;
-  const hashedPassword = await bcrypt.hash(password, 10);
+  const {username, email, password } = req.body;
+  if (!username || !email || !password) {
+    return res.status(400).json({ message: 'Username, email, and password are required' });
+  }
 
-  User.findByEmail(email, (err, results) => {
+  if (!validator.isEmail(email)) {
+    return res.status(400).json({ message: 'Invalid email format' });
+  }
+
+  if (!validator.isLength(password, { min: 8 })) {
+    return res.status(400).json({ message: 'Password minimal 8 karakter' });
+  }
+  const sanitizeUsername = sanitizeHtml(username);
+  const sanitizeEmail = sanitizeHtml(email);
+  const sanitizePassword = sanitizeHtml(password);
+
+  const hashedPassword = await bcrypt.hash(sanitizePassword, 10);
+
+  User.findByEmail(sanitizeEmail, (err, results) => {
     if (results.length > 0) return res.status(400).json({ message: 'Email already exists' });
 
-    User.create({ email, password: hashedPassword }, (err) => {
+    User.create({ username: sanitizeUsername, email: sanitizeEmail, password: hashedPassword }, (err) => {
       if (err) return res.status(500).json({ message: 'Registration error' });
       res.status(201).json({ message: 'User registered' });
-    });
+    });    
   });
 };
 
 exports.login = (req, res) => {
   const { email, password } = req.body;
 
-  User.findByEmail(email, async (err, results) => {
+  const sanitizeEmail = sanitizeHtml(email);
+  const sanitizePassword = sanitizeHtml(password);
+
+  User.findByEmail(sanitizeEmail, async (err, results) => {
     if (results.length === 0) return res.status(400).json({ message: 'Invalid credentials' });
 
     const user = results[0];
-    const isMatch = await bcrypt.compare(password, user.password);
+    const isMatch = await bcrypt.compare(sanitizePassword, user.password);
     if (!isMatch) return res.status(401).json({ message: 'Wrong password' });
 
     const token = generateToken(user);
@@ -44,19 +64,34 @@ exports.login = (req, res) => {
 
 exports.forgotPassword = async (req, res) => {
   const { email, newPassword } = req.body;
-  const hashedPassword = await bcrypt.hash(newPassword, 10);
 
-  User.updatePassword(email, hashedPassword, (err, result) => {
-    if (err || result.affectedRows === 0) return res.status(400).json({ message: 'Reset failed or email not found' });
-    res.status(200).json({ message: 'Password reset successful' });
+  const sanitizeEmail = sanitizeHtml(email);
+  const sanitizePassword = sanitizeHtml(newPassword);
+  
+  if (!validator.isLength(sanitizePassword, { min: 8 })) {
+    return res.status(400).json({ message: 'Password minimal 8 karakter' });
+  }
+
+  const hashedPassword = await bcrypt.hash(sanitizePassword, 10);
+
+  User.findByEmail(sanitizeEmail, (err, result)=>{
+    if (result.length === 0) return res.status(400).json({message: "Email tidak ditemukan"});
+    
+    User.updatePassword(sanitizeEmail, hashedPassword, (err, result) => {
+      if (err || result.affectedRows === 0) return res.status(400).json({ message: 'Reset failed or email not found' });
+      res.status(200).json({ message: 'Password reset successful' });
+    });
   });
+
 };
 
 exports.changeProfilePicture = async (req, res) => {
     const email = req.body.email;
     const file = req.file;
 
-    if(!file || !email) {
+    const sanitizeEmail = sanitizeHtml(email);
+
+    if(!file || !sanitizeEmail) {
         return res.status(400).json({ message: 'Email atau Foto tidak terupload'});
     }
 
