@@ -62,6 +62,7 @@ http://api.nurudhi.my.id/api/auth
 ### ✅ Pastikan frontend mengirim cookie
 
 Gunakan fetch seperti ini:
+```
 fetch('http://api.nurudhi.my.id/api/auth/login', {
   method: 'POST',
   credentials: 'include',
@@ -70,6 +71,7 @@ fetch('http://api.nurudhi.my.id/api/auth/login', {
   },
   body: JSON.stringify({ email, password })
 });
+```
 
 ---
 
