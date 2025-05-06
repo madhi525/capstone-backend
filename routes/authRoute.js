@@ -6,6 +6,7 @@ const upload = require('../middleware/multerConfig');
 /*
 register 
 req : {
+username: "username",
 email : "emailuser@gmail.com",
 password : "passworduser"
 }

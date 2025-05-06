@@ -20,4 +20,5 @@ app.use('/loss', (req, res) => {
 });
 
 const PORT = process.env.PORT;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+const IP_SERVER = process.env.IP_SERVER
+app.listen(PORT, IP_SERVER, () => console.log(`Server running on port ${PORT}`));
