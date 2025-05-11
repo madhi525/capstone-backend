@@ -58,7 +58,7 @@ exports.login = (req, res) => {
       sameSite: 'None',
       maxAge: 5*60*60*1000 
     });
-    res.status(200).json({ message : 'Login Berhasil'});
+    res.status(200).json({ message : 'Login Berhasil', username : user.username});
   });
 };
 
