@@ -16,11 +16,11 @@ app.use(cors({
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use('/api/auth', authRoutes);
-app.use('api/barang', barangRoutes);
+app.use('/api/barang', barangRoutes);
 app.use('/loss', (req, res) => {
     res.json({message: 'akses berhasil'})
 });
 
 const PORT = process.env.PORT;
 const IP_SERVER = process.env.IP_SERVER
-app.listen(PORT, IP_SERVER, () => console.log(`Server running on port ${PORT}`));
+app.listen(PORT,  IP_SERVER,() => console.log(`Server running on port ${PORT}`));

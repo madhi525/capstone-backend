@@ -7,10 +7,10 @@ const {
     ambilBarang,
     ambilBarangId,
     tambahBarang,
-    editBarangById,
-    hapusBarangById,
-    cariBarangByFilter
-} = require('../controllers/controllerBarang');
+    editBarang,
+    hapusBarang,
+    cariBarang
+} = require('../controllers/itemController');
 
 // Semua route ini dilindungi oleh middleware verifyToken
 
@@ -24,12 +24,12 @@ router.get('/:id', verifyToken, ambilBarangId);
 router.post('/', verifyToken, upload.single('foto'), tambahBarang);
 
 // PUT edit barang berdasarkan ID
-router.put('/:id', verifyToken, upload.single('foto'), editBarangById);
+router.put('/:id', verifyToken, upload.single('foto'), editBarang);
 
 // DELETE hapus barang berdasarkan ID
-router.delete('/:id', verifyToken, hapusBarangById);
+router.delete('/:id', verifyToken, hapusBarang);
 
 // GET cari barang berdasarkan query string
-router.get('/search/filter', verifyToken, cariBarangByFilter);
+router.get('/search/filter', verifyToken, cariBarang);
 
 module.exports = router;
