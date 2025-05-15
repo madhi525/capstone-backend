@@ -1,31 +1,50 @@
 const db = require("../config/db");
 
-const ambilBarangByIddanUser = async (id, user) => {
+// Ambil semua barang milik user tertentu dengan pagination
+const ambilSemuaBarangUser = async (userId, limit, offset) => {
     try {
-        const query = `SELECT * FROM barang WHERE id = ? AND user_id = ?`;
-        const [row] = await db.query(query, [id, user]);
-        return row[0] || null;
+        const countQuery = `
+            SELECT COUNT(*) AS total
+            FROM Produk
+            WHERE id_user = ?
+        `;
+        const [countRows] = await db.query(countQuery, [userId]);
+        const total = countRows[0].total;
+
+        const dataQuery = `
+            SELECT *
+            FROM Produk
+            WHERE id_user = ?
+            ORDER BY stok DESC
+            LIMIT ? OFFSET ?
+        `;
+        const [dataRows] = await db.query(dataQuery, [userId, limit, offset]);
+
+        return {
+            count: total,
+            rows: dataRows
+        };
     } catch (error) {
         console.log(error);
         throw error;
     }
 };
 
-const ambilSemuaBarangUser = async (user, limit = 10, offset = 0) => {
+// Ambil satu barang berdasarkan ID produk
+const ambilBarangById = async (id) => {
     try {
-        const query = `SELECT * FROM barang WHERE user = ? LIMIT ? OFFSET ?`;
-        const [rows] = await db.query(query, [user, limit, offset]);
-        return rows;
+        const [rows] = await db.query('SELECT * FROM Produk WHERE id_produk = ?', [id]);
+        return rows[0];
     } catch (error) {
         console.log(error);
         throw error;
     }
 };
 
+// Tambah barang ke tabel Produk
 const tambahBarang = async (data) => {
     try {
-        const query = `INSERT INTO barang SET ?`;
-        const [result] = await db.query(query, data);
+        const [result] = await db.query(`INSERT INTO Produk SET ?`, data);
         return result;
     } catch (error) {
         console.log(error);
@@ -33,10 +52,21 @@ const tambahBarang = async (data) => {
     }
 };
 
+// Input stok barang masuk
+const restock = async (data) => {
+    try {
+        const [result] = await db.query(`INSERT INTO Barang_Masuk SET ?`, data);
+        return result;
+    } catch (error) {
+        console.log(error);
+        throw error;
+    }
+};
+
+// Edit barang berdasarkan id_produk
 const editBarang = async (id, data) => {
     try {
-        const query = `UPDATE barang SET ? WHERE id = ?`;
-        const [result] = await db.query(query, [data, id]);
+        const [result] = await db.query(`UPDATE Produk SET ? WHERE id_produk = ?`, [data, id]);
         return result;
     } catch (error) {
         console.log(error);
@@ -44,10 +74,10 @@ const editBarang = async (id, data) => {
     }
 };
 
+// Hapus barang dari tabel Produk
 const hapusBarang = async (id) => {
     try {
-        const query = `DELETE FROM barang WHERE id = ?`;
-        const [result] = await db.query(query, id);
+        const [result] = await db.query(`DELETE FROM Produk WHERE id_produk = ?`, [id]);
         return result;
     } catch (error) {
         console.log(error);
@@ -55,10 +85,10 @@ const hapusBarang = async (id) => {
     }
 };
 
-const logPerubahanBarang = async (id, aksi, user) => {
+// Input data barang keluar
+const reduce = async (data) => {
     try {
-        const query = `INSERT INTO log_perubahan_barang (id, aksi, user, tanggal) VALUES (?, ?, ?, NOW())`;
-        const [result] = await db.query(query, [id, aksi, user]);
+        const [result] = await db.query(`INSERT INTO Barang_Keluar SET ?`, data);
         return result;
     } catch (error) {
         console.log(error);
@@ -66,18 +96,39 @@ const logPerubahanBarang = async (id, aksi, user) => {
     }
 };
 
+// Menghapus entri salah input pada Barang_Masuk
+const salahInputMasuk = async (id) => {
+    try {
+        const [result] = await db.query(`DELETE FROM Barang_Masuk WHERE id_masuk = ?`, [id]);
+        return result;
+    } catch (error) {
+        console.log(error);
+        throw error;
+    }
+};
+
+// Menghapus entri salah input pada Barang_Keluar
+const salahInputKeluar = async (id) => {
+    try {
+        const [result] = await db.query(`DELETE FROM Barang_Keluar WHERE id_keluar = ?`, [id]);
+        return result;
+    } catch (error) {
+        console.log(error);
+        throw error;
+    }
+};
+
+// Cari barang berdasarkan nama dan kategori
 const cariBarang = async (filters) => {
     try {
-        let query = `SELECT * FROM barang WHERE 1=1`; // Kondisi default yang selalu benar, agar lebih mudah menambahkannya
-        let queryParams = []; // Menyimpan parameter query yang digunakan untuk mencegah SQL Injection
-        
-        // Menambahkan filter untuk nama barang (pencarian berdasarkan nama)
+        let query = `SELECT * FROM Produk WHERE 1=1`;
+        let queryParams = [];
+
         if (filters.nama) {
-            query += ` AND nama LIKE ?`;
+            query += ` AND nama_produk LIKE ?`;
             queryParams.push(`%${filters.nama}%`);
         }
 
-        // Menambahkan filter untuk tipe barang
         if (filters.kategori) {
             query += ` AND kategori = ?`;
             queryParams.push(filters.kategori);
@@ -92,11 +143,14 @@ const cariBarang = async (filters) => {
 };
 
 module.exports = {
-    tambahBarang,
-    hapusBarang,
-    logPerubahanBarang,
-    cariBarang,
-    ambilBarangByIddanUser,
     ambilSemuaBarangUser,
-    editBarang
+    tambahBarang,
+    restock,
+    editBarang,
+    hapusBarang,
+    reduce,
+    cariBarang,
+    salahInputMasuk,
+    salahInputKeluar,
+    ambilBarangById
 };

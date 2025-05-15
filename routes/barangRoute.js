@@ -1,35 +1,43 @@
 const express = require('express');
 const router = express.Router();
 const { verifyToken } = require('../middleware/authMiddleware');
-const upload = require('../middleware/multerConfig'); // jika kamu pakai multer untuk upload foto
+const upload = require('../middleware/multerConfig'); // middleware untuk upload gambar
 
 const {
     ambilBarang,
     ambilBarangId,
     tambahBarang,
+    restockBarang,
     editBarang,
     hapusBarang,
-    cariBarang
+    cariBarang,
+    reduceBarang
 } = require('../controllers/itemController');
 
 // Semua route ini dilindungi oleh middleware verifyToken
 
-// GET semua barang milik user (dengan optional limit & offset)
+// GET semua barang milik user (optional: limit & offset)
 router.get('/', verifyToken, ambilBarang);
 
 // GET cari barang berdasarkan query string
 router.get('/search', verifyToken, cariBarang);
 
-// GET barang by ID untuk user yang login
+// GET ambil detail barang berdasarkan ID
 router.get('/:id', verifyToken, ambilBarangId);
 
-// POST tambah barang (bisa upload foto juga jika perlu)
+// POST tambah barang baru (dengan upload foto)
 router.post('/', verifyToken, upload.single('foto'), tambahBarang);
 
-// PUT edit barang berdasarkan ID
+// PUT update barang berdasarkan ID (dengan upload foto jika diganti)
 router.put('/:id', verifyToken, upload.single('foto'), editBarang);
 
 // DELETE hapus barang berdasarkan ID
 router.delete('/:id', verifyToken, hapusBarang);
+
+// PATCH untuk mengurangi stok barang
+router.patch('/reduce/:id', verifyToken, reduceBarang);
+
+// PATCH untuk restock barang
+router.patch('/restock/:id', verifyToken, restockBarang);
 
 module.exports = router;
