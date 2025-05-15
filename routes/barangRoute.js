@@ -17,6 +17,9 @@ const {
 // GET semua barang milik user (dengan optional limit & offset)
 router.get('/', verifyToken, ambilBarang);
 
+// GET cari barang berdasarkan query string
+router.get('/search', verifyToken, cariBarang);
+
 // GET barang by ID untuk user yang login
 router.get('/:id', verifyToken, ambilBarangId);
 
@@ -28,8 +31,5 @@ router.put('/:id', verifyToken, upload.single('foto'), editBarang);
 
 // DELETE hapus barang berdasarkan ID
 router.delete('/:id', verifyToken, hapusBarang);
-
-// GET cari barang berdasarkan query string
-router.get('/search/filter', verifyToken, cariBarang);
 
 module.exports = router;

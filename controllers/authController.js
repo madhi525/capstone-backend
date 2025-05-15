@@ -48,17 +48,21 @@ exports.login = (req, res) => {
     if (results.length === 0) return res.status(400).json({ message: 'Invalid credentials' });
 
     const user = results[0];
+    console.log(user);
     const isMatch = await bcrypt.compare(sanitizePassword, user.password);
     if (!isMatch) return res.status(401).json({ message: 'Wrong password' });
 
     const token = generateToken(user);
-    res.cookie('token', token, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'None',
-      maxAge: 5*60*60*1000 
-    });
-    res.status(200).json({ message : 'Login Berhasil', username : user.username});
+    //  res.cookie('token', token, {
+    //   httpOnly: true,
+    //   secure: true,           // wajib true kalau sameSite: 'none'
+    //   sameSite: 'none',       // gunakan lowercase 'none' di Express
+    //   domain: '.nurudhi.my.id', // scope cookie ke seluruh sub-domain
+    //   path: '/',              // kirim di semua path
+    //   maxAge: 5 * 60 * 60 * 1000
+    // });
+
+    res.status(200).json({ message : 'Login Berhasil', username : user.username, token : token, email : user.email});
   });
 };
 
