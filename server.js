@@ -7,8 +7,10 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 
 dotenv.config();
+
+const SERVER_DNS = process.env.SERVER_DNS;
 app.use(cors({
-    origin: 'https://frontend-capstone-orcin.vercel.app',
+    origin: SERVER_DNS,
     credentials: true
 }));
 
@@ -18,9 +20,9 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use('/api/auth', authRoutes);
 app.use('/api/barang', barangRoutes);
 app.use('/loss', (req, res) => {
-    res.json({message: 'akses berhasil'})
+    res.json({message: 'akses berhasil'});
 });
 
 const PORT = process.env.PORT;
-const IP_SERVER = process.env.IP_SERVER
+const IP_SERVER = process.env.IP_SERVER;
 app.listen(PORT,  IP_SERVER,() => console.log(`Server running on port ${PORT}`));

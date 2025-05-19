@@ -160,7 +160,7 @@ exports.cariBarang = async (req, res) => {
     }
 };
 
-exports.reduce = async (req, res) => {
+exports.reduceBarang = async (req, res) => {
     try {
         const id_user = req.params.id;
         const { id_produk, jumlah, keterangan } = req.body;
