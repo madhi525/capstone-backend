@@ -17,22 +17,22 @@ const {
 // Semua route ini dilindungi oleh middleware verifyToken
 
 // GET semua barang milik user (optional: limit & offset)
-router.get('/', verifyToken, ambilBarang);
+router.get('/ambil/', verifyToken, ambilBarang);
 
 // GET cari barang berdasarkan query string
-router.get('/search', verifyToken, cariBarang);
+router.get('/cari/search', verifyToken, cariBarang);
 
 // GET ambil detail barang berdasarkan ID
-router.get('/:id', verifyToken, ambilBarangId);
+router.get('/ambilid/:id', verifyToken, ambilBarangId);
 
 // POST tambah barang baru (dengan upload foto)
-router.post('/', verifyToken, upload.single('foto'), tambahBarang);
+router.post('/tambah/', verifyToken, upload.single('foto'), tambahBarang);
 
 // PUT update barang berdasarkan ID (dengan upload foto jika diganti)
-router.put('/:id', verifyToken, upload.single('foto'), editBarang);
+router.put('/edit/:id', verifyToken, upload.single('foto'), editBarang);
 
 // DELETE hapus barang berdasarkan ID
-router.delete('/:id', verifyToken, hapusBarang);
+router.delete('/hapus/:id', verifyToken, hapusBarang);
 
 // PATCH untuk mengurangi stok barang
 router.patch('/reduce/:id', verifyToken, reduceBarang);

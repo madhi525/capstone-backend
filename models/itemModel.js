@@ -1,6 +1,5 @@
-const db = require("../config/db");
+const db = require("../config/dbPromise");
 
-// Ambil semua barang milik user tertentu dengan pagination
 const ambilSemuaBarangUser = async (userId, limit, offset) => {
     try {
         const countQuery = `
@@ -11,14 +10,20 @@ const ambilSemuaBarangUser = async (userId, limit, offset) => {
         const [countRows] = await db.query(countQuery, [userId]);
         const total = countRows[0].total;
 
-        const dataQuery = `
+        let dataQuery = `
             SELECT *
             FROM Produk
             WHERE id_user = ?
             ORDER BY stok DESC
-            LIMIT ? OFFSET ?
         `;
-        const [dataRows] = await db.query(dataQuery, [userId, limit, offset]);
+        const queryParams = [userId];
+
+        if (limit !== null && offset !== null) {
+            dataQuery += ` LIMIT ? OFFSET ?`;
+            queryParams.push(limit, offset);
+        }
+
+        const [dataRows] = await db.query(dataQuery, queryParams);
 
         return {
             count: total,

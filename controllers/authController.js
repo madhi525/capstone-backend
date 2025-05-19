@@ -62,7 +62,7 @@ exports.login = (req, res) => {
     //   maxAge: 5 * 60 * 60 * 1000
     // });
 
-    res.status(200).json({ message : 'Login Berhasil', username : user.username, token : token, email : user.email});
+    res.status(200).json({ message : 'Login Berhasil', id: user.id ,username : user.username, token : token, email : user.email});
   });
 };
 

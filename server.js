@@ -8,7 +8,7 @@ const cors = require('cors');
 
 dotenv.config();
 
-const SERVER_DNS = process.env.SERVER_DNS;
+const SERVER_DNS = process.env.FRONTEND_DNS;
 app.use(cors({
     origin: SERVER_DNS,
     credentials: true
