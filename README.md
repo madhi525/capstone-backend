@@ -3,8 +3,31 @@
 API ini menyediakan endpoint untuk **register**, **login** . Autentikasi dilakukan menggunakan **JWT** yang dikirim dalam bentuk **cookie** agar aman dan mendukung frontend/backend lintas domain.
 
 ---
+## ⚙️ Untuk menggunakan ini di local
+
+lakukan instalasi setelah pull
+
+```
+pnpm install
+```
+
+Lalu, jalankan developmen servernya:
+
+```
+npm run dev
+# or
+yarn dev
+# or
+pnpm dev
+# or
+bun dev
+```
+
+---
 
 ## 🔗 Base URL
+
+Kalau Mau Pakai hubungi Developer
 
 http://api.nurudhi.my.id/api/auth
 
