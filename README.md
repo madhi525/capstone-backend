@@ -103,7 +103,6 @@ fetch('http://api.nurudhi.my.id/api/auth/login', {
 ---
 
 ## 🛡️ Keamanan
-- Token disimpan sebagai HttpOnly cookie.
 - CORS diaktifkan dan disesuaikan agar bisa digunakan lintas domain.
 
 ---
