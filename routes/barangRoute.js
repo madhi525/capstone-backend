@@ -5,6 +5,8 @@ const upload = require('../middleware/multerConfig'); // middleware untuk upload
 
 const {
     ambilBarang,
+    ambilBarangKeluarUser,
+    ambilBarangMasukUser,
     ambilBarangId,
     tambahBarang,
     restockBarang,
@@ -18,6 +20,12 @@ const {
 
 // GET semua barang milik user (optional: limit & offset)
 router.get('/ambil/', verifyToken, ambilBarang);
+
+// GET semua barang Keluar milik user (optional: limit & offset)
+router.get('/ambilBarangKeluar/', verifyToken, ambilBarangKeluarUser);
+
+// GET semua barang Masuk milik user (optional: limit & offset)
+router.get('/ambilBarangMasuk/', verifyToken, ambilBarangMasukUser);
 
 // GET cari barang berdasarkan query string
 router.get('/cari/search', verifyToken, cariBarang);
@@ -35,9 +43,9 @@ router.put('/edit/:id', verifyToken, upload.single('foto'), editBarang);
 router.delete('/hapus/:id', verifyToken, hapusBarang);
 
 // PATCH untuk mengurangi stok barang
-router.patch('/reduce/:id', verifyToken, reduceBarang);
+router.patch('/reduce/', verifyToken, reduceBarang);
 
 // PATCH untuk restock barang
-router.patch('/restock/:id', verifyToken, restockBarang);
+router.patch('/restock/', verifyToken, restockBarang);
 
 module.exports = router;

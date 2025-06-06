@@ -8,13 +8,13 @@ const cors = require('cors');
 
 dotenv.config();
 
-const SERVER_DNS = process.env.FRONTEND_DNS;
-app.use(cors({
-    origin: SERVER_DNS,
-    credentials: true
-}));
+// const SERVER_DNS = process.env.FRONTEND_DNS;
+// app.use(cors({
+//     origin: "*",
+//     credentials: true
+// }));
 
-// app.use(cors());
+app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use('/api/auth', authRoutes);
@@ -25,4 +25,4 @@ app.use('/loss', (req, res) => {
 
 const PORT = process.env.PORT;
 const IP_SERVER = process.env.IP_SERVER;
-app.listen(PORT,  IP_SERVER,() => console.log(`Server running on port ${PORT}`));
+app.listen(5000, () => console.log(`Server running on port 5000}`));

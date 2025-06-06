@@ -35,6 +35,76 @@ const ambilSemuaBarangUser = async (userId, limit, offset) => {
     }
 };
 
+const ambilSemuaBarangKeluarUser = async (userId, limit, offset) => {
+    try {
+        const countQuery = `
+            SELECT COUNT(*) AS total
+            FROM Barang_Keluar
+            WHERE id_user = ?
+        `;
+        const [countRows] = await db.query(countQuery, [userId]);
+        const total = countRows[0].total;
+
+        let dataQuery = `
+            SELECT *
+            FROM Barang_Keluar
+            WHERE id_user = ?
+            ORDER BY jumlah DESC
+        `;
+        const queryParams = [userId];
+
+        if (limit !== null && offset !== null) {
+            dataQuery += ` LIMIT ? OFFSET ?`;
+            queryParams.push(limit, offset);
+        }
+
+        const [dataRows] = await db.query(dataQuery, queryParams);
+
+        return {
+            count: total,
+            rows: dataRows
+        };
+    } catch (error) {
+        console.log(error);
+        throw error;
+    }
+};
+
+const ambilSemuaBarangMasukUser = async (userId, limit, offset) => {
+    try {
+        const countQuery = `
+            SELECT COUNT(*) AS total
+            FROM Barang_Masuk
+            WHERE id_user = ?
+        `;
+        const [countRows] = await db.query(countQuery, [userId]);
+        const total = countRows[0].total;
+
+        let dataQuery = `
+            SELECT *
+            FROM Barang_Masuk
+            WHERE id_user = ?
+            ORDER BY jumlah DESC
+        `;
+        const queryParams = [userId];
+
+        if (limit !== null && offset !== null) {
+            dataQuery += ` LIMIT ? OFFSET ?`;
+            queryParams.push(limit, offset);
+        }
+
+        const [dataRows] = await db.query(dataQuery, queryParams);
+
+        return {
+            count: total,
+            rows: dataRows
+        };
+    } catch (error) {
+        console.log(error);
+        throw error;
+    }
+};
+
 // Ambil satu barang berdasarkan ID produk
 const ambilBarangById = async (id) => {
     try {
@@ -50,6 +120,7 @@ const ambilBarangById = async (id) => {
 const tambahBarang = async (data) => {
     try {
         const [result] = await db.query(`INSERT INTO Produk SET ?`, data);
+        console.log('result insert:', result);
         return result;
     } catch (error) {
         console.log(error);
@@ -149,6 +220,8 @@ const cariBarang = async (filters) => {
 
 module.exports = {
     ambilSemuaBarangUser,
+    ambilSemuaBarangKeluarUser,
+    ambilSemuaBarangMasukUser,
     tambahBarang,
     restock,
     editBarang,
