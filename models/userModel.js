@@ -3,36 +3,36 @@ const db = require('../config/dbPromise');
 const User = {
   findByEmail: async (email) => {
     try {
-      db.query('SELECT * FROM User WHERE email = ?', [email]);
+      const [rows] = await db.query('SELECT * FROM User WHERE email = ?', [email]);
+      return rows.length > 0 ? rows[0] : null;
     } catch (error) {
-      console.log(error);
       throw error;
     }
   },
 
-  create: (user) => {
+  create: async (user) => {
     try {
-      db.query('INSERT INTO User SET ?', user);
+      const [result] = await db.query('INSERT INTO User SET ?', user);
+      return result;
     } catch (error) {
-      console.log(error);
       throw error;
     }
   },
 
-  updatePassword: (email, hashedPassword) => {
+  updatePassword: async (email, hashedPassword) => {
     try {
-      db.query('UPDATE User SET password = ? WHERE email = ?', [hashedPassword, email]);
+      const [result] = await db.query('UPDATE User SET password = ? WHERE email = ?', [hashedPassword, email]);
+      return result > 0;
     } catch (error) {
-      console.log(error);
       throw error;
     } 
   },
 
-  updateFotoProfil: (path, email) => {
+  updateFotoProfil: async (path, email) => {
     try {
-      db.query('UPDATE User SET fotoprofil = ? WHERE email = ?', [path,email]);
+      const [result] = await db.query('UPDATE User SET fotoprofil = ? WHERE email = ?', [path, email]);
+      return result > 0;
     } catch (error) {
-      console.log(error);
       throw error;
     }
   }
