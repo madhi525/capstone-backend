@@ -1,4 +1,4 @@
-const mysql = require('mysql2/promise'); // pakai versi promise
+const mysql = require('mysql2/promise');
 require('dotenv').config();
 
 const db = mysql.createPool({

@@ -2,36 +2,22 @@ const express = require('express');
 const router = express.Router();
 const authController = require('../controllers/authController');
 const upload = require('../middleware/multerConfig');
+const rateLimit = require("express-rate-limit");
 
-/*
-register 
-req : {
-username: "username",
-email : "emailuser@gmail.com",
-password : "passworduser"
-}
-res : {
-message : "custom message"
-}
-*/ 
-router.post('/register', authController.register);
+const limiter = rateLimit({
+    windowMs: 1 * 60 * 1000,
+    max: 5,
+    standardHeaders: true,
+    legacyHeaders: false,
+    message: 'Terlalu banyak percobaan register, coba lagi sebentar lagi.'
+});
 
-/* 
-Login
-req : {
-email : "emailuser@gmail.com",
-password : "passworduser"
-}
-res : {
-massage : "custom massage" / token : token
-}
-*/
+router.post('/register',limiter, authController.register);
+
 router.post('/login', authController.login);
 
-// Masih tahap konstruksi mailer butuh auth gmail, bahaya
 // router.post('/forgot-password', authController.forgotPassword);
 
-// taruh di kostumisasi-user-route.js
 //router.post('/change-profil-picture', upload.single('fotoprofil'), authController.changeProfilePicture);
 
 module.exports = router;
